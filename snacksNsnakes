@@ -1,6 +1,6 @@
 import cv2
 import mediapipe as mp
-import pygame,random
+import pygame, random, time
 
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(static_image_mode=False, max_num_hands=1, min_detection_confidence=0.5)
@@ -47,6 +47,29 @@ def show_score(display):
 
     # displaying text
     display.blit(score_surface, score_rect)
+
+def gameOver():
+    font = pygame.font.SysFont('Arial', 50)
+
+    game_over_dis = font.render("Your score is : " + str(score), True, red)
+
+    game_over_rect = game_over_dis.get_rect()
+
+    game_over_rect.midtop = (display_width / 2, display_height / 4)
+
+    # blit will draw the text on screen
+    display.blit(game_over_dis, game_over_rect)
+    pygame.display.flip()
+
+    # after 2 seconds we will quit the
+    # program
+    time.sleep(2)
+
+    # deactivating pygame library
+    pygame.quit()
+
+    # quit the program
+    quit()
 
 def detect_finger_movement(frame):
     global prev_x, prev_y
@@ -148,8 +171,7 @@ while cap.isOpened():
             pygame.display.update()
             fps.tick(snake_speed)
         else:
-            pygame.quit()
-            quit()
+            gameOver()
 
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
